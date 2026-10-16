@@ -230,6 +230,10 @@ app.whenReady().then(() => {
 app.on('before-quit', () => {
     pythonProcess.stdin.write('{"operation": "close"}' + '\n');
     if (pythonProcess && !pythonProcess.killed) {
-        spawn("taskkill", ["/PID", pythonProcess.pid, "/T", "/F"]);
+        if (process.platform==='win32') {
+            spawn("taskkill", ["/PID", pythonProcess.pid, "/T", "/F"]);
+        } else {
+            pythonProcess.kill();
+        }
     }
 });
